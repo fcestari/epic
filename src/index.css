@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+/* ── Design Tokens ─────────────────────────────────────────── */
+@theme {
+  --color-bg-base: #131f2f;
+  --color-bg-dark: #0d1829;
+  --color-gold: #b99162;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto,
+    sans-serif;
+}
+
+/* ── Base Styles ───────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: #131f2f;
+    color: #ffffff;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  ::selection {
+    background-color: rgba(185, 145, 98, 0.3);
+    color: #ffffff;
+  }
+}
+
+/* ── Industry Text Animation ───────────────────────────────── */
+@keyframes industry-in {
+  from {
+    opacity: 0;
+    transform: translateY(32px) skewY(2deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) skewY(0deg);
+  }
+}
+
+@keyframes industry-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) skewY(0deg);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-32px) skewY(-2deg);
+  }
+}
+
+.industry-text-enter {
+  animation: industry-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.industry-text-exit {
+  animation: industry-out 0.35s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+
+/* ── Logo Cloud Marquee ────────────────────────────────────── */
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee-left {
+  animation: marquee-left 32s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-right {
+  animation: marquee-right 26s linear infinite;
+  will-change: transform;
+}
+
+/* ── General Reveal ────────────────────────────────────────── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
