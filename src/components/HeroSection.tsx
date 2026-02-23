@@ -76,7 +76,7 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center pt-16 overflow-hidden"
+      className="relative min-h-screen flex items-start lg:items-center pt-16 overflow-hidden"
     >
       {/* Background radial glow */}
       <div
@@ -96,7 +96,7 @@ export default function HeroSection() {
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full grid lg:grid-cols-2 gap-8 items-center py-12 lg:py-16">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full grid lg:grid-cols-2 gap-6 lg:gap-8 items-center py-10 lg:py-16 pb-16 lg:pb-16">
         {/* Left: Text */}
         <div className="animate-fade-up">
           {/* Eyebrow */}
@@ -205,7 +205,7 @@ export default function HeroSection() {
         </div>
 
         {/* Right: Globe */}
-        <div className="hidden lg:flex justify-center items-center relative">
+        <div className="flex justify-center items-center relative mt-6 lg:mt-0">
           {/* Glow behind globe */}
           <div
             className="absolute pointer-events-none"
@@ -218,7 +218,9 @@ export default function HeroSection() {
               filter: 'blur(40px)',
             }}
           />
-          <Globe />
+          <div className="w-full max-w-[260px] sm:max-w-xs lg:max-w-none mx-auto">
+            <Globe />
+          </div>
         </div>
       </div>
 

@@ -17,7 +17,7 @@ export default function App() {
   }, []);
 
   return (
-    <div style={{ backgroundColor: '#131f2f', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: '#131f2f', minHeight: '100vh', overflowX: 'hidden' }}>
       <Navbar scrolled={scrolled} />
       <HeroSection />
       <ServicesSection />

@@ -108,7 +108,7 @@ function ServiceChip({
         }}
       />
       <span
-        className="text-xs font-medium leading-none whitespace-nowrap"
+        className="text-xs font-medium leading-tight"
         style={{ color: hovered ? '#ffffff' : 'rgba(255,255,255,0.72)' }}
       >
         {svc.text}
@@ -285,7 +285,7 @@ export default function ServicesSection() {
   }, []);
 
   return (
-    <section id="services" className="py-16 md:py-28 px-6 lg:px-8">
+    <section id="services" className="py-16 md:py-28 px-6 lg:px-8 overflow-hidden">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-12 md:mb-20">
