@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import {
   Flame,
   HardHat,
@@ -20,6 +21,7 @@ interface Product {
   icon: React.ElementType;
   color: string;
   description: string;
+  featured?: boolean;
 }
 
 const products: Product[] = [
@@ -28,6 +30,7 @@ const products: Product[] = [
     icon: Flame,
     color: '#3b82f6',
     description: 'Proteção contra danos físicos e interrupção de negócios.',
+    featured: true,
   },
   {
     title: 'Engenharia & Construção',
@@ -58,6 +61,7 @@ const products: Product[] = [
     icon: Users2,
     color: '#6366f1',
     description: 'Proteção de responsabilidade civil para líderes corporativos.',
+    featured: true,
   },
   {
     title: 'E&O — RC Profissional',
@@ -70,6 +74,7 @@ const products: Product[] = [
     icon: Shield,
     color: '#ef4444',
     description: 'Defesa contra ataques cibernéticos e violação de dados.',
+    featured: true,
   },
   {
     title: 'Responsabilidade Civil',
@@ -109,104 +114,176 @@ const products: Product[] = [
   },
 ];
 
-function InsuranceCard({ product }: { product: Product }) {
+// ── 3D Tilt Card ────────────────────────────────────────────────
+function InsuranceCard({
+  product,
+  index,
+}: {
+  product: Product;
+  index: number;
+}) {
   const Icon = product.icon;
+  const cardRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
+  const [conicAngle, setConicAngle] = useState(0);
+  const animRef = useRef<number | null>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = cardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    const rx = -y * 14;
+    const ry = x * 14;
+    el.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(10px)`;
+    // Move radial highlight with cursor
+    if (glowRef.current) {
+      glowRef.current.style.background = `radial-gradient(circle at ${(x + 0.5) * 100}% ${(y + 0.5) * 100}%, ${product.color}18 0%, transparent 65%)`;
+    }
+  };
+
+  const handleMouseEnter = () => {
+    setHovered(true);
+    // Start conic rotation
+    let angle = 0;
+    const spin = () => {
+      angle = (angle + 2) % 360;
+      setConicAngle(angle);
+      animRef.current = requestAnimationFrame(spin);
+    };
+    animRef.current = requestAnimationFrame(spin);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+    if (animRef.current) cancelAnimationFrame(animRef.current);
+    const el = cardRef.current;
+    if (el) {
+      el.style.transition = 'transform 600ms cubic-bezier(0.23, 1, 0.32, 1)';
+      el.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateZ(0)';
+      setTimeout(() => {
+        if (el) el.style.transition = '';
+      }, 650);
+    }
+  };
+
+  const isFeatured = product.featured;
 
   return (
+    // Conic border wrapper
     <div
-      className="group relative rounded-2xl p-6 flex flex-col items-center text-center cursor-default transition-all duration-500 hover:-translate-y-3"
+      className={`relative rounded-2xl p-px ${isFeatured ? 'sm:col-span-2' : ''}`}
       style={{
-        background: 'rgba(255,255,255,0.02)',
-        border: `1px solid rgba(255,255,255,0.07)`,
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.background = 'rgba(255,255,255,0.05)';
-        el.style.borderColor = product.color;
-        el.style.boxShadow = `0 0 32px ${product.color}28, 0 24px 48px rgba(0,0,0,0.28)`;
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.background = 'rgba(255,255,255,0.02)';
-        el.style.borderColor = 'rgba(255,255,255,0.07)';
-        el.style.boxShadow = 'none';
+        background: hovered
+          ? `conic-gradient(from ${conicAngle}deg at 50% 50%, transparent 0%, ${product.color} 15%, transparent 35%)`
+          : 'rgba(255,255,255,0.07)',
+        transition: hovered ? 'none' : 'background 400ms ease',
+        animationDelay: `${index * 40}ms`,
       }}
     >
-      {/* Hover gradient overlay */}
       <div
-        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        ref={cardRef}
+        className="card-reveal relative rounded-2xl p-6 h-full flex flex-col cursor-default"
         style={{
-          background: `radial-gradient(circle at 50% 0%, ${product.color}10 0%, transparent 70%)`,
+          background: 'rgba(13, 24, 41, 0.92)',
+          backdropFilter: 'blur(12px)',
+          animationDelay: `${index * 40}ms`,
+          willChange: 'transform',
         }}
-      />
-
-      {/* Icon */}
-      <div
-        className="relative z-10 mb-4 p-4 rounded-2xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
-        style={{ background: `${product.color}1a` }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        <Icon size={32} style={{ color: product.color }} />
+        {/* Radial cursor glow */}
+        <div
+          ref={glowRef}
+          className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300"
+          style={{ opacity: hovered ? 1 : 0 }}
+        />
+
+        {/* Icon */}
+        <div className="relative z-10 mb-4 self-start">
+          <div
+            className="p-3 rounded-xl transition-all duration-300"
+            style={{
+              background: `${product.color}1a`,
+              boxShadow: hovered ? `0 0 20px ${product.color}40` : 'none',
+              transform: hovered ? 'scale(1.12) rotate(3deg)' : 'scale(1) rotate(0deg)',
+              transition: 'transform 300ms ease, box-shadow 300ms ease',
+            }}
+          >
+            <Icon
+              size={isFeatured ? 36 : 28}
+              style={{
+                color: product.color,
+                filter: hovered ? `drop-shadow(0 0 6px ${product.color}80)` : 'none',
+                transition: 'filter 300ms ease',
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Title */}
+        <h3
+          className="relative z-10 text-sm font-bold text-white leading-tight mb-2"
+          style={{ fontSize: isFeatured ? '1rem' : '0.875rem' }}
+        >
+          {product.title}
+        </h3>
+
+        {/* Description — always visible on featured, reveal on hover for small */}
+        <p
+          className="relative z-10 text-xs leading-relaxed mt-1 overflow-hidden transition-all duration-400"
+          style={{
+            color: 'rgba(255,255,255,0.58)',
+            maxHeight: isFeatured ? '60px' : hovered ? '60px' : '0px',
+            opacity: isFeatured ? 1 : hovered ? 1 : 0,
+            transition: 'max-height 400ms ease, opacity 400ms ease',
+          }}
+        >
+          {product.description}
+        </p>
+
+        {/* Accent underline */}
+        <div
+          className="relative z-10 h-px mt-auto pt-3"
+          style={{
+            width: hovered ? '48px' : '0px',
+            background: product.color,
+            transition: 'width 400ms cubic-bezier(0.22, 1, 0.36, 1) 60ms',
+            borderRadius: '2px',
+          }}
+        />
       </div>
-
-      {/* Title */}
-      <h3
-        className="relative z-10 text-sm font-bold text-white leading-tight mb-2"
-        style={{ minHeight: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      >
-        {product.title}
-      </h3>
-
-      {/* Description (reveals on hover) */}
-      <p
-        className="relative z-10 text-xs leading-relaxed overflow-hidden transition-all duration-500"
-        style={{
-          color: 'rgba(255,255,255,0.58)',
-          maxHeight: '0',
-          opacity: 0,
-        }}
-        ref={(el) => {
-          if (!el) return;
-          const parent = el.closest('.group') as HTMLElement | null;
-          if (!parent) return;
-          const show = () => {
-            el.style.maxHeight = '60px';
-            el.style.opacity = '1';
-          };
-          const hide = () => {
-            el.style.maxHeight = '0';
-            el.style.opacity = '0';
-          };
-          parent.addEventListener('mouseenter', show);
-          parent.addEventListener('mouseleave', hide);
-        }}
-      >
-        {product.description}
-      </p>
-
-      {/* Accent underline */}
-      <div
-        className="relative z-10 h-0.5 mt-3 transition-all duration-500 delay-75 group-hover:w-12"
-        style={{
-          background: product.color,
-          width: '0',
-        }}
-        ref={(el) => {
-          if (!el) return;
-          const parent = el.closest('.group') as HTMLElement | null;
-          if (!parent) return;
-          parent.addEventListener('mouseenter', () => {
-            el.style.width = '48px';
-          });
-          parent.addEventListener('mouseleave', () => {
-            el.style.width = '0';
-          });
-        }}
-      />
     </div>
   );
 }
 
+// ── Section ─────────────────────────────────────────────────────
 export default function InsuranceSection() {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    const cards = grid.querySelectorAll<HTMLElement>('.card-reveal');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          cards.forEach((card) => card.classList.add('is-visible'));
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(grid);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
       id="insurance"
@@ -230,10 +307,13 @@ export default function InsuranceSection() {
           </p>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {products.map((product) => (
-            <InsuranceCard key={product.title} product={product} />
+        {/* Bento Grid */}
+        <div
+          ref={gridRef}
+          className="grid grid-cols-2 sm:grid-cols-4 gap-4"
+        >
+          {products.map((product, i) => (
+            <InsuranceCard key={product.title} product={product} index={i} />
           ))}
         </div>
       </div>

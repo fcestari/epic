@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface Industry {
   name: string;
@@ -66,50 +66,203 @@ const industries: Industry[] = [
   },
 ];
 
-type Phase = 'enter' | 'exit';
+const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&';
+const INTERVAL_MS = 3000;
+
+// ── Text Scramble Hook ──────────────────────────────────────────
+function useScrambleText(target: string) {
+  const [display, setDisplay] = useState(target);
+  const frameRef = useRef<number | null>(null);
+
+  const scramble = useCallback(() => {
+    if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    const chars = target.split('');
+    const revealed = new Array(chars.length).fill(false);
+    let frame = 0;
+    const totalFrames = chars.length * 3 + 12;
+
+    const tick = () => {
+      frame++;
+      const revealCount = Math.floor((frame / totalFrames) * chars.length);
+      for (let i = 0; i < revealCount; i++) revealed[i] = true;
+
+      const result = chars.map((ch, i) => {
+        if (ch === ' ') return ' ';
+        if (revealed[i]) return ch;
+        return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+      });
+
+      setDisplay(result.join(''));
+      if (frame < totalFrames) {
+        frameRef.current = requestAnimationFrame(tick);
+      } else {
+        setDisplay(target);
+      }
+    };
+
+    frameRef.current = requestAnimationFrame(tick);
+  }, [target]);
+
+  useEffect(() => {
+    scramble();
+    return () => {
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    };
+  }, [scramble]);
+
+  return display;
+}
+
+// ── Progress Arc ────────────────────────────────────────────────
+function ProgressArc({ color, arcKey }: { color: string; arcKey: number }) {
+  const r = 10;
+  const circumference = 2 * Math.PI * r;
+
+  return (
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 28 28"
+      style={{ transform: 'rotate(-90deg)', overflow: 'visible' }}
+    >
+      {/* Track */}
+      <circle cx="14" cy="14" r={r} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2" />
+      {/* Animated arc */}
+      <circle
+        key={arcKey}
+        cx="14"
+        cy="14"
+        r={r}
+        fill="none"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeDasharray={`${circumference} ${circumference}`}
+        style={{
+          animation: `arc-drain ${INTERVAL_MS}ms linear forwards`,
+          strokeDashoffset: 0,
+        }}
+      />
+    </svg>
+  );
+}
 
 export default function IndustriesSection() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [phase, setPhase] = useState<Phase>('enter');
+  const [prevIndex, setPrevIndex] = useState<number | null>(null);
+  const [arcKey, setArcKey] = useState(0);
+  const [visibleList, setVisibleList] = useState<boolean[]>(
+    new Array(industries.length).fill(true)
+  );
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const imageRef = useRef<HTMLDivElement | null>(null);
 
-  const goTo = (index: number) => {
-    if (index === activeIndex) return;
-    setPhase('exit');
-    timerRef.current = setTimeout(() => {
+  const current = industries[activeIndex];
+  const displayName = useScrambleText(current.name);
+
+  const goTo = useCallback(
+    (index: number) => {
+      if (index === activeIndex) return;
+      if (timerRef.current) clearTimeout(timerRef.current);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+
+      setPrevIndex(activeIndex);
       setActiveIndex(index);
-      setPhase('enter');
-    }, 350);
-  };
+      setArcKey((k) => k + 1);
+
+      // Staggered list scan
+      setVisibleList(new Array(industries.length).fill(false));
+      industries.forEach((_, i) => {
+        timerRef.current = setTimeout(() => {
+          setVisibleList((prev) => {
+            const next = [...prev];
+            next[i] = true;
+            return next;
+          });
+        }, i * 35);
+      });
+
+      // Restart auto-advance
+      intervalRef.current = setInterval(() => {
+        setActiveIndex((i) => {
+          const next = (i + 1) % industries.length;
+          setPrevIndex(i);
+          setArcKey((k) => k + 1);
+          return next;
+        });
+      }, INTERVAL_MS);
+    },
+    [activeIndex]
+  );
 
   useEffect(() => {
     intervalRef.current = setInterval(() => {
-      setPhase('exit');
-      timerRef.current = setTimeout(() => {
-        setActiveIndex((i) => (i + 1) % industries.length);
-        setPhase('enter');
-      }, 350);
-    }, 3000);
-
+      setActiveIndex((i) => {
+        const next = (i + 1) % industries.length;
+        setPrevIndex(i);
+        setArcKey((k) => k + 1);
+        return next;
+      });
+    }, INTERVAL_MS);
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, []);
 
-  const current = industries[activeIndex];
+  // Mouse parallax on image panel
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!imageRef.current) return;
+    const rect = imageRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 14;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 10;
+    const img = imageRef.current.querySelector('.parallax-img') as HTMLElement | null;
+    if (img) img.style.transform = `scale(1.08) translate(${x}px, ${y}px)`;
+  };
+
+  const handleMouseLeave = () => {
+    const img = imageRef.current?.querySelector('.parallax-img') as HTMLElement | null;
+    if (img) img.style.transform = 'scale(1.08) translate(0, 0)';
+  };
+
+  const padIndex = (i: number) => String(i + 1).padStart(2, '0');
 
   return (
     <section
       id="industries"
-      className="py-28 px-6 lg:px-8"
+      className="relative py-28 px-6 lg:px-8 overflow-hidden"
       style={{ backgroundColor: '#0d1829' }}
     >
-      <div className="max-w-7xl mx-auto">
+      {/* Reactive background tint */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundColor: `${current.color}0A`,
+          transition: 'background-color 900ms ease',
+        }}
+      />
+
+      <div className="relative max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left: Animated text block */}
+          {/* ── Left: Animated text block ─────────────────────── */}
           <div>
+            {/* Counter */}
+            <div
+              className="flex items-baseline gap-2 mb-6"
+              style={{ fontVariantNumeric: 'tabular-nums' }}
+            >
+              <span
+                className="text-3xl font-black tracking-tight transition-colors duration-500"
+                style={{ color: current.color }}
+              >
+                {padIndex(activeIndex)}
+              </span>
+              <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.20)' }}>
+                / {padIndex(industries.length - 1)}
+              </span>
+            </div>
+
             <p
               className="text-xs font-semibold tracking-widest uppercase mb-8"
               style={{ color: 'rgba(255,255,255,0.30)' }}
@@ -124,16 +277,13 @@ export default function IndustriesSection() {
               Especialistas em
             </p>
 
-            {/* Animated name */}
+            {/* Scramble name */}
             <div className="overflow-hidden" style={{ minHeight: '112px' }}>
               <h2
-                key={activeIndex}
-                className={`text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none ${
-                  phase === 'enter' ? 'industry-text-enter' : 'industry-text-exit'
-                }`}
-                style={{ color: current.color }}
+                className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none transition-colors duration-500"
+                style={{ color: current.color, fontFamily: "'SF Mono', 'Fira Code', monospace" }}
               >
-                {current.name}
+                {displayName}
               </h2>
             </div>
 
@@ -141,48 +291,67 @@ export default function IndustriesSection() {
             <div className="overflow-hidden mt-6" style={{ minHeight: '72px' }}>
               <p
                 key={`desc-${activeIndex}`}
-                className={`text-base leading-relaxed ${
-                  phase === 'enter' ? 'industry-text-enter' : 'industry-text-exit'
-                }`}
-                style={{ color: 'rgba(255,255,255,0.55)', animationDelay: '60ms' }}
+                className="text-base leading-relaxed industry-text-enter"
+                style={{ color: 'rgba(255,255,255,0.55)', animationDelay: '80ms' }}
               >
                 {current.description}
               </p>
             </div>
 
-            {/* Nav dots */}
-            <div className="flex gap-2 mt-10 flex-wrap">
+            {/* Progress arc nav dots */}
+            <div className="flex gap-2 mt-10 flex-wrap items-center">
               {industries.map((ind, i) => (
                 <button
                   key={i}
                   onClick={() => goTo(i)}
-                  className="rounded-full transition-all duration-300"
-                  style={{
-                    width: i === activeIndex ? '24px' : '8px',
-                    height: '8px',
-                    backgroundColor: i === activeIndex ? ind.color : 'rgba(255,255,255,0.20)',
-                    borderRadius: '4px',
-                  }}
                   aria-label={ind.name}
-                />
+                  className="relative flex items-center justify-center"
+                  style={{ width: '28px', height: '28px' }}
+                >
+                  {i === activeIndex ? (
+                    <ProgressArc color={ind.color} arcKey={arcKey} />
+                  ) : (
+                    <div
+                      className="rounded-full transition-all duration-300"
+                      style={{
+                        width: '8px',
+                        height: '8px',
+                        backgroundColor: 'rgba(255,255,255,0.20)',
+                      }}
+                    />
+                  )}
+                  {i === activeIndex && (
+                    <div
+                      className="absolute rounded-full"
+                      style={{
+                        width: '5px',
+                        height: '5px',
+                        backgroundColor: ind.color,
+                      }}
+                    />
+                  )}
+                </button>
               ))}
             </div>
 
-            {/* Industry name list */}
+            {/* Industry name list with staggered scan */}
             <div className="mt-8 space-y-1">
               {industries.map((ind, i) => (
                 <button
                   key={i}
                   onClick={() => goTo(i)}
-                  className="flex items-center gap-3 w-full text-left py-2 px-3 rounded-lg transition-all duration-200 group"
+                  className="flex items-center gap-3 w-full text-left py-2 px-3 rounded-lg transition-all duration-200"
                   style={{
                     background: i === activeIndex ? `${ind.color}12` : 'transparent',
+                    opacity: visibleList[i] ? 1 : 0.2,
+                    transition: 'opacity 200ms ease, background 200ms ease',
                   }}
                 >
                   <div
                     className="w-1.5 h-1.5 rounded-full flex-shrink-0 transition-all duration-300"
                     style={{
-                      backgroundColor: i === activeIndex ? ind.color : 'rgba(255,255,255,0.25)',
+                      backgroundColor:
+                        i === activeIndex ? ind.color : 'rgba(255,255,255,0.25)',
                       transform: i === activeIndex ? 'scale(1.4)' : 'scale(1)',
                     }}
                   />
@@ -199,12 +368,21 @@ export default function IndustriesSection() {
             </div>
           </div>
 
-          {/* Right: Image panel */}
-          <div className="relative h-[480px] lg:h-[560px] rounded-2xl overflow-hidden">
+          {/* ── Right: Image panel ────────────────────────────── */}
+          <div
+            ref={imageRef}
+            className="relative h-[480px] lg:h-[560px] overflow-hidden"
+            style={{
+              clipPath: 'polygon(4% 0, 100% 0, 100% 100%, 0% 100%)',
+              borderRadius: '1rem',
+            }}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+          >
             {industries.map((ind, i) => (
               <div
                 key={i}
-                className="absolute inset-0 transition-opacity duration-500"
+                className="absolute inset-0 transition-opacity duration-700"
                 style={{ opacity: i === activeIndex ? 1 : 0 }}
               >
                 {ind.image ? (
@@ -212,13 +390,22 @@ export default function IndustriesSection() {
                     <img
                       src={ind.image}
                       alt={ind.name}
-                      className="w-full h-full object-cover"
+                      className="parallax-img w-full h-full object-cover"
+                      style={{
+                        transform: 'scale(1.08) translate(0, 0)',
+                        transition: 'transform 600ms cubic-bezier(0.23, 1, 0.32, 1)',
+                        animation:
+                          i === activeIndex && i !== prevIndex
+                            ? 'ken-burns 3.5s ease-in-out forwards'
+                            : 'none',
+                      }}
                     />
-                    {/* Overlay gradient */}
+                    {/* Color gradient overlay */}
                     <div
                       className="absolute inset-0"
                       style={{
-                        background: `linear-gradient(to top, ${ind.color}40 0%, transparent 50%)`,
+                        background: `linear-gradient(to top, ${ind.color}55 0%, transparent 55%)`,
+                        transition: 'background 600ms ease',
                       }}
                     />
                     {/* Name overlay */}

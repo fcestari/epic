@@ -91,3 +91,87 @@
 .animate-fade-up {
   animation: fade-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
+
+/* ── Ken Burns (IndustriesSection image zoom) ──────────────── */
+@keyframes ken-burns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+.ken-burns-active {
+  animation: ken-burns 3.5s ease-in-out forwards;
+}
+
+/* ── SVG Progress Arc (IndustriesSection nav) ──────────────── */
+@keyframes arc-drain {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 62.83;
+  }
+}
+
+/* ── Card entry (InsuranceSection staggered reveal) ────────── */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card-reveal {
+  opacity: 0;
+}
+
+.card-reveal.is-visible {
+  animation: card-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── Conic border rotation (InsuranceSection cards) ────────── */
+@property --conic-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes conic-spin {
+  to {
+    --conic-angle: 360deg;
+  }
+}
+
+.conic-border-active {
+  animation: conic-spin 1.8s linear infinite;
+}
+
+/* ── Icon glow pulse (InsuranceSection) ────────────────────── */
+@keyframes icon-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--pulse-color);
+    opacity: 1;
+  }
+  70% {
+    box-shadow: 0 0 0 14px transparent;
+    opacity: 0;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    opacity: 0;
+  }
+}
+
+/* ── Staggered list scan (IndustriesSection list items) ─────── */
+@keyframes list-scan {
+  0% { opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { opacity: 1; }
+}
