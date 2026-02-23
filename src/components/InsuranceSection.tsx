@@ -286,19 +286,19 @@ export default function InsuranceSection() {
   return (
     <section
       id="insurance"
-      className="py-28 px-6 lg:px-8"
+      className="py-16 md:py-28 px-6 lg:px-8"
       style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 md:mb-16">
           <p
             className="text-xs font-semibold tracking-widest uppercase mb-4"
             style={{ color: 'rgba(255,255,255,0.35)' }}
           >
             Portfólio
           </p>
-          <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-white mb-4">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-4">
             Seguros & Coberturas
           </h2>
           <p className="text-lg max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.55)' }}>

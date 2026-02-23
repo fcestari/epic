@@ -96,12 +96,12 @@ export default function HeroSection() {
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full grid lg:grid-cols-2 gap-8 items-center py-16">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full grid lg:grid-cols-2 gap-8 items-center py-12 lg:py-16">
         {/* Left: Text */}
         <div className="animate-fade-up">
           {/* Eyebrow */}
           <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs font-semibold tracking-widest uppercase"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 md:mb-8 text-xs font-semibold tracking-widest uppercase"
             style={{
               background: 'rgba(185,145,98,0.10)',
               border: '1px solid rgba(185,145,98,0.25)',
@@ -117,7 +117,7 @@ export default function HeroSection() {
 
           {/* Headline */}
           <h1
-            className="text-6xl md:text-7xl lg:text-7xl font-black tracking-tight leading-none mb-6"
+            className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight leading-none mb-6"
             style={{ color: '#ffffff' }}
           >
             Insurtech
@@ -127,14 +127,14 @@ export default function HeroSection() {
 
           {/* Subtitle */}
           <p
-            className="text-xl md:text-2xl mb-10 max-w-lg leading-relaxed"
+            className="text-base md:text-xl lg:text-2xl mb-8 md:mb-10 max-w-lg leading-relaxed"
             style={{ color: 'rgba(255,255,255,0.55)' }}
           >
             Conectando você aos melhores mercados de seguros do mundo
           </p>
 
           {/* Stats row */}
-          <div className="flex gap-8 mb-10">
+          <div className="flex flex-wrap gap-6 md:gap-8 mb-8 md:mb-10">
             {[
               { value: '14+', label: 'Produtos de Seguro' },
               { value: '8+', label: 'Indústrias' },
@@ -205,7 +205,7 @@ export default function HeroSection() {
         </div>
 
         {/* Right: Globe */}
-        <div className="flex justify-center items-center relative">
+        <div className="hidden lg:flex justify-center items-center relative">
           {/* Glow behind globe */}
           <div
             className="absolute pointer-events-none"

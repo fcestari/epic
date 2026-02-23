@@ -29,7 +29,7 @@ export default function Footer() {
             alignItems: 'flex-start',
           }}
         >
-          <img src="/logo-dark.png" alt="EPIC" style={{ height: '2.5rem', objectFit: 'contain' }} />
+          <img src="logo-dark.png" alt="EPIC" style={{ height: '2.5rem', objectFit: 'contain' }} />
 
           <span
             style={{

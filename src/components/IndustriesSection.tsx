@@ -12,35 +12,35 @@ const industries: Industry[] = [
   {
     name: 'ENERGIA',
     color: '#E87F35',
-    image: '/energia.png',
+    image: 'energia.png',
     description:
       'Soluções especializadas para usinas, transmissão, distribuição e energias renováveis.',
   },
   {
     name: 'INFRAESTRUTURA',
     color: '#6B8BC4',
-    image: '/infraestrutura.png',
+    image: 'infraestrutura.png',
     description:
       'Proteção para grandes projetos de infraestrutura pública e privada em todo o Brasil.',
   },
   {
     name: 'PETRÓLEO E GÁS',
     color: '#A8A8AE',
-    image: '/petroleo_gas.png',
+    image: 'petroleo_gas.png',
     description:
       'Cobertura upstream, midstream e downstream com gestão de riscos ambientais e operacionais.',
   },
   {
     name: 'INSTITUIÇÕES FINANCEIRAS',
     color: '#5E5CE6',
-    image: '/instituicoes_financeiras.png',
+    image: 'instituicoes_financeiras.png',
     description:
       'Seguros especializados para bancos, fundos, fintechs e demais instituições do mercado financeiro.',
   },
   {
     name: 'PORTOS & LOGÍSTICA',
     color: '#30D158',
-    image: '/portos_logistica.png',
+    image: 'portos_logistica.png',
     description:
       'Proteção completa para operadores portuários, armazéns e cadeias de suprimentos.',
   },
@@ -187,7 +187,7 @@ export default function IndustriesSection() {
   return (
     <section
       id="industries"
-      className="relative py-28 px-6 lg:px-8 overflow-hidden"
+      className="relative py-16 md:py-28 px-6 lg:px-8 overflow-hidden"
       style={{ backgroundColor: '#0d1829' }}
     >
       {/* Reactive background tint */}
@@ -200,7 +200,7 @@ export default function IndustriesSection() {
       />
 
       <div className="relative max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* ── Left: Animated text block ─────────────────────── */}
           <div>
             {/* Counter */}
@@ -234,9 +234,9 @@ export default function IndustriesSection() {
             </p>
 
             {/* Scramble name */}
-            <div className="overflow-hidden" style={{ minHeight: '112px' }}>
+            <div className="overflow-hidden" style={{ minHeight: '72px' }}>
               <h2
-                className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none transition-colors duration-500"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none transition-colors duration-500"
                 style={{ color: current.color, fontFamily: "'SF Mono', 'Fira Code', monospace" }}
               >
                 {displayName}
@@ -327,7 +327,7 @@ export default function IndustriesSection() {
           {/* ── Right: Image panel ────────────────────────────── */}
           <div
             ref={imageRef}
-            className="relative h-[480px] lg:h-[560px] overflow-hidden"
+            className="relative h-[260px] md:h-[400px] lg:h-[560px] overflow-hidden"
             style={{
               clipPath: 'polygon(4% 0, 100% 0, 100% 100%, 0% 100%)',
               borderRadius: '1rem',

@@ -200,7 +200,7 @@ function PhaseRow({
 
       {/* ── Content Column ───────────────────────── */}
       <div
-        className="flex-1 pb-20"
+        className="flex-1 pb-10 md:pb-20"
         style={{
           paddingLeft: '24px',
           paddingTop: '4px',
@@ -285,17 +285,17 @@ export default function ServicesSection() {
   }, []);
 
   return (
-    <section id="services" className="py-28 px-6 lg:px-8">
+    <section id="services" className="py-16 md:py-28 px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="mb-20">
+        <div className="mb-12 md:mb-20">
           <p
             className="text-xs font-semibold tracking-widest uppercase mb-4"
             style={{ color: 'rgba(255,255,255,0.35)' }}
           >
             Metodologia
           </p>
-          <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-white mb-4">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-4">
             Nossos Serviços
           </h2>
           <p className="text-lg max-w-xl" style={{ color: 'rgba(255,255,255,0.55)' }}>
