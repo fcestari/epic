@@ -74,7 +74,6 @@ const products: Product[] = [
     icon: Shield,
     color: '#ef4444',
     description: 'Defesa contra ataques cibernéticos e violação de dados.',
-    featured: true,
   },
   {
     title: 'Responsabilidade Civil',
@@ -185,7 +184,7 @@ function InsuranceCard({
     >
       <div
         ref={cardRef}
-        className="card-reveal relative rounded-2xl p-6 h-full flex flex-col cursor-default"
+        className="card-reveal relative rounded-2xl p-4 h-full flex flex-col cursor-default"
         style={{
           background: 'rgba(13, 24, 41, 0.92)',
           backdropFilter: 'blur(12px)',
@@ -204,21 +203,21 @@ function InsuranceCard({
         />
 
         {/* Icon */}
-        <div className="relative z-10 mb-4 self-start">
+        <div className="relative z-10 mb-3 self-start">
           <div
-            className="p-3 rounded-xl transition-all duration-300"
+            className="p-2.5 rounded-xl transition-all duration-300"
             style={{
               background: `${product.color}1a`,
-              boxShadow: hovered ? `0 0 20px ${product.color}40` : 'none',
-              transform: hovered ? 'scale(1.12) rotate(3deg)' : 'scale(1) rotate(0deg)',
+              boxShadow: hovered ? `0 0 16px ${product.color}40` : 'none',
+              transform: hovered ? 'scale(1.10) rotate(3deg)' : 'scale(1) rotate(0deg)',
               transition: 'transform 300ms ease, box-shadow 300ms ease',
             }}
           >
             <Icon
-              size={isFeatured ? 36 : 28}
+              size={isFeatured ? 26 : 20}
               style={{
                 color: product.color,
-                filter: hovered ? `drop-shadow(0 0 6px ${product.color}80)` : 'none',
+                filter: hovered ? `drop-shadow(0 0 5px ${product.color}80)` : 'none',
                 transition: 'filter 300ms ease',
               }}
             />
@@ -227,8 +226,8 @@ function InsuranceCard({
 
         {/* Title */}
         <h3
-          className="relative z-10 text-sm font-bold text-white leading-tight mb-2"
-          style={{ fontSize: isFeatured ? '1rem' : '0.875rem' }}
+          className="relative z-10 font-bold text-white leading-tight mb-1.5"
+          style={{ fontSize: isFeatured ? '0.875rem' : '0.78rem' }}
         >
           {product.title}
         </h3>

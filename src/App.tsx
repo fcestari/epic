@@ -4,7 +4,6 @@ import HeroSection from './components/HeroSection';
 import ServicesSection from './components/ServicesSection';
 import InsuranceSection from './components/InsuranceSection';
 import IndustriesSection from './components/IndustriesSection';
-import LogoCloud from './components/LogoCloud';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 
@@ -24,7 +23,6 @@ export default function App() {
       <ServicesSection />
       <InsuranceSection />
       <IndustriesSection />
-      <LogoCloud />
       <ContactSection />
       <Footer />
     </div>

@@ -34,7 +34,7 @@ export default function Navbar({ scrolled }: NavbarProps) {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <a href="#hero" className="flex-shrink-0">
+        <a href="/" className="flex-shrink-0">
           <img src="/logo-dark.png" alt="EPIC" className="h-9 object-contain" />
         </a>
 

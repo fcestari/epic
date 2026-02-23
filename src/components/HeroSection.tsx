@@ -96,7 +96,7 @@ export default function HeroSection() {
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full grid lg:grid-cols-2 gap-8 items-center py-24">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full grid lg:grid-cols-2 gap-8 items-center py-16">
         {/* Left: Text */}
         <div className="animate-fade-up">
           {/* Eyebrow */}
@@ -117,7 +117,7 @@ export default function HeroSection() {
 
           {/* Headline */}
           <h1
-            className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none mb-6"
+            className="text-6xl md:text-7xl lg:text-7xl font-black tracking-tight leading-none mb-6"
             style={{ color: '#ffffff' }}
           >
             Insurtech
