@@ -1,81 +1,75 @@
-const ROW_1 = ['Allianz', 'Zurich', 'AIG', 'Swiss Re', 'Munich Re', 'Chubb', 'Mapfre', 'Berkley'];
-const ROW_2 = ["Lloyd's", 'HDI', 'Tokio Marine', 'Generali', 'Sompo', 'IRB Re', 'Hannover Re', 'Scor'];
-
-function LogoPill({ name }: { name: string }) {
-  return (
-    <div
-      className="flex-shrink-0 px-7 py-3 rounded-xl text-sm font-semibold tracking-wide transition-all duration-300 cursor-default whitespace-nowrap"
-      style={{
-        background: 'rgba(255,255,255,0.04)',
-        border: '1px solid rgba(255,255,255,0.09)',
-        color: 'rgba(255,255,255,0.45)',
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.color = 'rgba(255,255,255,0.85)';
-        el.style.background = 'rgba(255,255,255,0.07)';
-        el.style.borderColor = 'rgba(185,145,98,0.4)';
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.color = 'rgba(255,255,255,0.45)';
-        el.style.background = 'rgba(255,255,255,0.04)';
-        el.style.borderColor = 'rgba(255,255,255,0.09)';
-      }}
-    >
-      {name}
-    </div>
-  );
-}
-
-function MarqueeRow({
-  logos,
-  direction,
-}: {
-  logos: string[];
-  direction: 'left' | 'right';
-}) {
-  const doubled = [...logos, ...logos];
-
-  return (
-    <div
-      className="flex overflow-hidden"
-      style={{
-        maskImage:
-          'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)',
-        WebkitMaskImage:
-          'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)',
-      }}
-    >
-      <div
-        className={direction === 'left' ? 'animate-marquee-left' : 'animate-marquee-right'}
-        style={{ display: 'flex', gap: '1rem' }}
-      >
-        {doubled.map((name, i) => (
-          <LogoPill key={`${name}-${i}`} name={name} />
-        ))}
-      </div>
-    </div>
-  );
-}
+const logos = [
+  { name: 'Eneva', url: '/eneva.png' },
+  { name: 'Tidewater', url: '/tidewater.png' },
+  { name: 'Vinci Partners', url: '/vinci.png' },
+  { name: 'BHub', url: '/bhub.png' },
+  { name: 'Karpowership', url: '/karpowership.png' },
+  { name: 'Eterc', url: '/eterc.png' },
+  { name: 'Jet Sharing', url: '/jetsharing.png' },
+];
 
 export default function LogoCloud() {
   return (
     <section className="py-20 overflow-hidden">
       {/* Header */}
-      <div className="text-center mb-10">
+      <div className="text-center mb-12 px-6">
         <p
-          className="text-xs font-semibold tracking-widest uppercase"
-          style={{ color: 'rgba(255,255,255,0.30)' }}
+          className="text-xs font-semibold tracking-widest uppercase mb-4"
+          style={{ color: '#b99162' }}
         >
-          Mercados & Parceiros
+          Nossos Clientes
+        </p>
+        <h2
+          className="text-5xl md:text-5xl font-black tracking-tight"
+          style={{ color: '#ffffff' }}
+        >
+          Quem Confia na EPIC
+        </h2>
+        <p
+          className="mt-4 text-lg max-w-2xl mx-auto"
+          style={{ color: 'rgba(255,255,255,0.45)' }}
+        >
+          Empresas líderes que confiam na nossa expertise para proteger seus negócios
         </p>
       </div>
 
-      {/* Marquee rows */}
-      <div className="space-y-4">
-        <MarqueeRow logos={ROW_1} direction="left" />
-        <MarqueeRow logos={ROW_2} direction="right" />
+      {/* Marquee */}
+      <div className="mx-auto w-full px-4 md:px-8">
+        <div
+          className="relative flex gap-6 overflow-hidden p-2"
+          style={{
+            maskImage:
+              'linear-gradient(to left, transparent 0%, black 20%, black 80%, transparent 95%)',
+            WebkitMaskImage:
+              'linear-gradient(to left, transparent 0%, black 20%, black 80%, transparent 95%)',
+          }}
+        >
+          {Array(5)
+            .fill(null)
+            .map((_, index) => (
+              <div
+                key={index}
+                className="flex shrink-0 animate-logo-cloud flex-row justify-around gap-6"
+              >
+                {logos.map((logo) => (
+                  <div
+                    key={logo.name}
+                    className="flex items-center justify-center px-8 py-4 rounded-xl"
+                    style={{
+                      background: '#131f2f',
+                      minWidth: '160px',
+                    }}
+                  >
+                    <img
+                      src={logo.url}
+                      alt={logo.name}
+                      className="h-10 w-auto object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
+        </div>
       </div>
     </section>
   );

@@ -14,35 +14,46 @@ export default function Footer() {
   return (
     <footer
       style={{
-        backgroundColor: '#0d1829',
+        backgroundColor: '#131f2f',
         borderTop: '1px solid rgba(255,255,255,0.08)',
       }}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
-        {/* Top row */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-8"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+        {/* Top section */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            paddingBottom: '2rem',
+            alignItems: 'flex-start',
+          }}
         >
-          <img src="/logo-dark.png" alt="EPIC" className="h-10 object-contain" />
+          <img src="/logo-dark.png" alt="EPIC" style={{ height: '2.5rem', objectFit: 'contain' }} />
 
           <span
-            className="text-sm font-medium tracking-wide italic"
-            style={{ color: '#b99162' }}
+            style={{
+              color: '#b99162',
+              fontSize: '0.875rem',
+              fontWeight: 500,
+              letterSpacing: '0.05em',
+              fontStyle: 'italic',
+            }}
           >
             Go safe. Go EPIC.
           </span>
 
-          <nav className="flex flex-wrap gap-6">
+          <nav style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem' }}>
             {footerLinks.map((label) => (
               <a
-                key={label}
-                href="#"
-                className="text-sm transition-colors duration-200"
-                style={{ color: 'rgba(255,255,255,0.45)' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#3b82f6')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}
+          key={label}
+          href="#"
+          className="text-sm transition-colors duration-200"
+          style={{ color: 'rgba(255,255,255,0.45)' }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = '#3b82f6')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}
               >
-                {label}
+          {label}
               </a>
             ))}
           </nav>
@@ -50,8 +61,13 @@ export default function Footer() {
 
         {/* Contact row */}
         <div
-          className="py-8 flex flex-wrap gap-6 justify-center lg:justify-start"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+          style={{
+            padding: '2rem 0',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '1.5rem',
+            borderBottom: '1px solid rgba(255,255,255,0.08)',
+          }}
         >
           {contactItems.map((item) => {
             const Icon = item.icon;
@@ -78,11 +94,19 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div
-          className="mt-8 flex flex-col md:flex-row justify-between items-center gap-3 text-xs"
-          style={{ color: 'rgba(255,255,255,0.30)' }}
+          style={{
+            marginTop: '2rem',
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '0.75rem',
+            fontSize: '0.75rem',
+            color: 'rgba(255,255,255,0.30)',
+          }}
         >
           <p>© {year} EPIC. Todos os direitos reservados.</p>
-          <div className="text-center md:text-right space-y-0.5">
+          <div style={{ textAlign: 'right' }}>
             <p>EPIC BRASIL CORRETORA DE SEGUROS LTDA.</p>
             <p>CNPJ: 61.657.314/0001-56 · SUSEP: 252170712</p>
           </div>

@@ -61,32 +61,18 @@
   animation: industry-out 0.35s cubic-bezier(0.55, 0, 1, 0.45) forwards;
 }
 
-/* ── Logo Cloud Marquee ────────────────────────────────────── */
-@keyframes marquee-left {
+/* ── Logo Cloud ────────────────────────────────────────────── */
+@keyframes logo-cloud {
   from {
     transform: translateX(0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translateX(calc(-100% - 1.5rem));
   }
 }
 
-@keyframes marquee-right {
-  from {
-    transform: translateX(-50%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-.animate-marquee-left {
-  animation: marquee-left 32s linear infinite;
-  will-change: transform;
-}
-
-.animate-marquee-right {
-  animation: marquee-right 26s linear infinite;
+.animate-logo-cloud {
+  animation: logo-cloud 18s linear infinite;
   will-change: transform;
 }
 

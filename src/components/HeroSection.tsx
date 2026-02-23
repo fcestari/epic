@@ -6,7 +6,7 @@ type GlobeInstance = ReturnType<typeof createGlobe>;
 function Globe() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const globeRef = useRef<GlobeInstance | null>(null);
-  const phiRef = useRef(0);
+  const phiRef = useRef(-0.5);
   const widthRef = useRef(0);
 
   useEffect(() => {
