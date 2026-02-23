@@ -51,20 +51,20 @@ const industries: Industry[] = [
     description:
       'Soluções para empresas de serviços, consultoria, tecnologia e terceirização.',
   },
-  {
-    name: 'CTM',
-    color: '#FF9F0A',
-    image: null,
-    description:
-      'Seguros especializados para comércio, transporte e movimentação de mercadorias.',
-  },
-  {
-    name: 'EVENTOS & SHOW',
-    color: '#FF375F',
-    image: null,
-    description:
-      'Proteção para festivais, shows, feiras corporativas e grandes eventos ao vivo.',
-  },
+  // {
+  //   name: 'CTM',
+  //   color: '#FF9F0A',
+  //   image: 'ctm.png',
+  //   description:
+  //     'Seguros especializados para comércio, transporte e movimentação de mercadorias.',
+  // },
+  // {
+  //   name: 'EVENTOS & SHOW',
+  //   color: '#FF375F',
+  //   image: null,
+  //   description:
+  //     'Proteção para festivais, shows, feiras corporativas e grandes eventos ao vivo.',
+  // },
 ];
 
 const INTERVAL_MS = 3000;
