@@ -19,12 +19,29 @@ export default function App() {
   return (
     <div style={{ backgroundColor: '#131f2f', minHeight: '100vh', overflowX: 'hidden' }}>
       <Navbar scrolled={scrolled} />
-      <HeroSection />
-      <ServicesSection />
-      <InsuranceSection />
-      <IndustriesSection />
-      <ContactSection />
-      <Footer />
+
+      {/* Hero pinned in background; content scrolls over it */}
+      <div className="relative z-0" style={{ height: '100vh' }}>
+        <div className="fixed top-0 left-0 w-full h-screen z-0">
+          <HeroSection />
+        </div>
+      </div>
+
+      {/* This section scrolls up and covers the hero */}
+      <div
+        className="relative z-10"
+        style={{
+          borderRadius: '24px 24px 0 0',
+          backgroundColor: '#131f2f',
+          boxShadow: '0 -20px 60px rgba(0,0,0,0.4)',
+        }}
+      >
+        <ServicesSection />
+        <InsuranceSection />
+        <IndustriesSection />
+        <ContactSection />
+        <Footer />
+      </div>
     </div>
   );
 }
